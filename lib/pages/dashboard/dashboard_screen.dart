@@ -1,0 +1,67 @@
+import 'package:job/components/profile_thumbnail.dart';
+import 'package:job/constants/theme_constant.dart';
+import 'package:job/pages/dashboard/acount/account_screen.dart';
+import 'package:job/pages/dashboard/idea_screen.dart';
+
+import 'package:job/pages/dashboard/problem/problem_screen.dart';
+import 'package:job/user/user_service.dart';
+import 'package:flutter/material.dart';
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _pageIndex = 0;
+
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      ProblemScreen(),
+      IdeaScreen(),
+      // PlanScreen(),
+      AccountScreen(onChanged: () => setState(() {})),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        children: _pages, index: _pageIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: COLOR_PRIMARY,
+        unselectedItemColor: COLOR_BASE_DARKER,
+        currentIndex: _pageIndex,
+        onTap: (index) {
+          setState(() {
+            _pageIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            label: 'Problems',
+            icon: Icon(Icons.work_outline_rounded),
+          ),
+          BottomNavigationBarItem(label: 'Ideas', icon: Icon(Icons.light)),
+          // BottomNavigationBarItem(
+          //     label: 'Plans', icon: Icon(Icons.meeting_room)),
+          BottomNavigationBarItem(
+            label: 'Me',
+            icon: ProfileThumbnail(
+              width: 32,
+              height: 32,
+              thumnail_url: USER_AVATAR_THUMBNAIL_URL,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

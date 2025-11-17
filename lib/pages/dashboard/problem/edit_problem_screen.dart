@@ -1,0 +1,282 @@
+import 'package:job/components/colored_button.dart';
+import 'package:job/components/profile_thumbnail.dart';
+import 'package:job/components/progress_circular.dart';
+import 'package:job/components/rounded_rect_image.dart';
+import 'package:job/components/screen_action_bar.dart';
+import 'package:job/components/screen_frame.dart';
+import 'package:job/constants/theme_constant.dart';
+import 'package:job/constants/url_constant.dart';
+import 'package:job/pages/dashboard/problem/add_requirement_screen.dart';
+import 'package:job/pages/requirement_application_list.dart';
+import 'package:job/utils/api_service.dart';
+import 'package:job/utils/common_function.dart';
+import 'package:flutter/material.dart';
+
+class EditProblemScreen extends StatefulWidget {
+  final int problem_id;
+  const EditProblemScreen({super.key, required this.problem_id});
+
+  @override
+  State<EditProblemScreen> createState() => _EditProblemScreenState();
+}
+
+class _EditProblemScreenState extends State<EditProblemScreen> {
+  dynamic _problem;
+
+  List<dynamic> _skillRequirements = [];
+
+  List<dynamic> _teamMember = [];
+  bool _fetchingRequirement = false;
+  bool _fetchingTeam = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getProblem();
+    initSkills();
+    initTeam();
+  }
+
+  initTeam() async {
+    var body = {"problem_id": widget.problem_id};
+
+    setState(() {
+      _fetchingTeam = true;
+    });
+
+    ApiResponse response = await postService(URL_TEAM_MEMBER_OF_PROBLEM, body);
+
+    setState(() {
+      _fetchingTeam = false;
+    });
+    if (response.isSuccess) {
+      setState(() {
+        _teamMember = response.body;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenFrame(
+      titleBar: ScreenActionBar(
+        title: 'Editing problem',
+        backButtonEnabled: true,
+      ),
+      body: _problem != null
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_problem['title'], style: getTextTheme().titleMedium),
+                addVerticalSpace(),
+                RoundedRectImage(
+                  width: double.infinity,
+                  height: 200,
+                  image_url: _problem['image_url'],
+                  thumbnail_url: _problem['thumbnail_url'],
+                ),
+                addVerticalSpace(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Add Requirements:', style: getTextTheme().titleSmall),
+                    addHorizontalSpace(4),
+                    if (_fetchingRequirement)
+                      ProgressCircular(
+                        color: COLOR_BLACK,
+                        width: 22,
+                        height: 22,
+                      ),
+                    Spacer(),
+                    ColoredButton(
+                      onPressed: () {
+                        setState(() {
+                          openRequirementScreen();
+                        });
+                      },
+                      child: Icon(Icons.add, color: COLOR_BASE),
+                    ),
+                  ],
+                ),
+                ..._skillRequirements.map((requirement) {
+                  return ListTile(
+                    onTap: () {
+                      moveToApplicationList(requirement, requirement['skill']);
+                    },
+                    title: Row(
+                      children: [
+                        Icon(Icons.school),
+                        addHorizontalSpace(),
+                        Text(requirement['skill']),
+                        addHorizontalSpace(),
+                        Spacer(),
+                        (requirement['application_count'] == 0)
+                            ? InkWell(
+                                onTap: () {
+                                  deleteRequirement(requirement['id']);
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: const Color.fromARGB(
+                                    255,
+                                    235,
+                                    129,
+                                    121,
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: COLOR_BASE_SUCCESS,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '${formatNumber(requirement['application_count'])} / ${requirement['max_limit']}',
+                            style: getTextTheme(color: COLOR_BASE).titleSmall,
+                          ),
+                        ),
+                        addHorizontalSpace(),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                addVerticalSpace(DEFAULT_LARGE_SPACE),
+                Row(
+                  children: [
+                    Text(
+                      'Team  (${_teamMember.length})',
+                      style: getTextTheme().titleSmall,
+                    ),
+                    addHorizontalSpace(SPACE_SMALL),
+                    if (_fetchingTeam)
+                      ProgressCircular(
+                        color: COLOR_BLACK,
+                        width: 22,
+                        height: 22,
+                      ),
+                  ],
+                ),
+
+                addVerticalSpace(),
+
+                ..._teamMember.map((member) {
+                  return ListTile(
+                    title: Row(
+                      children: [
+                        ProfileThumbnail(
+                          width: 32,
+                          height: 32,
+                          radius: 16,
+                          thumnail_url: member['thumbnail'],
+                        ),
+                        addHorizontalSpace(),
+                        Text(
+                          '${member['name']}',
+                          style: getTextTheme().titleSmall,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ProgressCircular(color: COLOR_BLACK),
+                ),
+              ],
+            ),
+    );
+  }
+
+  getProblem() async {
+    var body = {"id": widget.problem_id};
+    ApiResponse response = await postService(URL_GET_PROBLEM, body);
+
+    if (response.isSuccess) {
+      setState(() {
+        _problem = response.body[0];
+        print('getProblem screen $_problem');
+      });
+    }
+  }
+
+  openRequirementScreen() async {
+    var skill_id = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (builder) => AddRequirementScreen()),
+    );
+
+    if (skill_id != null) {
+      setState(() {
+        addRequirement(skill_id);
+      });
+    }
+  }
+
+  deleteRequirement(requirement_id) async {
+    var body = {"requirement_id": requirement_id};
+
+    setState(() {
+      _fetchingRequirement = true;
+    });
+
+    ApiResponse response = await postService(
+      URL_REMOVE_SKILL_FROM_PROBLEM,
+      body,
+    );
+    _fetchingRequirement = true;
+    if (response.isSuccess) {
+      initSkills();
+    }
+  }
+
+  addRequirement(int skill_id) async {
+    var body = {"skill_id": skill_id, "problem_id": widget.problem_id};
+    ApiResponse response = await postService(URL_ADD_SKILL_TO_PROBLEM, body);
+
+    if (response.isSuccess) {
+      if (response.body['status'] == 'OK') {
+        initSkills();
+      } else if (response.body['status'] == 'NOT OK') {
+        showAlert(context, response.body['heading'], response.body['message']);
+      }
+    }
+  }
+
+  initSkills() async {
+    var body = {"problem_id": widget.problem_id};
+
+    setState(() {
+      _fetchingRequirement = true;
+    });
+
+    ApiResponse response = await postService(URL_GET_SKILL_DETAILS, body);
+
+    setState(() {
+      _fetchingRequirement = false;
+    });
+
+    if (response.isSuccess) {
+      setState(() {
+        _skillRequirements = response.body;
+      });
+    }
+  }
+
+  moveToApplicationList(requirement, String skill_name) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (builder) =>
+            RequirementApplicationList(requirement: requirement),
+      ),
+    );
+    setState(() {});
+  }
+}
