@@ -21,7 +21,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     initNotificaitonList();
-    insertScreen(USER_ID, 'notification', 0);
+    insertScreen(USER_ID, 'notification', 0, "screen_open");
   }
 
   initNotificaitonList() async {

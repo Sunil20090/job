@@ -45,7 +45,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
 
     getNotificationCount();
 
-    insertScreen(USER_ID, "problem_list", 0);
+    insertScreen(USER_ID, "problem_list", 0, "screen_open");
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=

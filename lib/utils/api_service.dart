@@ -89,11 +89,12 @@ postWithProgress({
   }
 }
 
-insertScreen(int user_id, String screenName, int reference_id) async {
+insertScreen(int user_id, String screenName, int reference_id, String event_name) async {
   var body = {
     "user_id": user_id,
     "screen": screenName,
     "reference_id": reference_id,
+    "event_name" : event_name
   };
   await postService(URL_SCREEN_RECORD, body);
 }

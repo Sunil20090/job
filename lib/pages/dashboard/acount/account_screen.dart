@@ -46,7 +46,7 @@ class _AccountScreenState extends State<AccountScreen>
 
     initAccountDetails();
 
-    insertScreen(USER_ID, "account", _isSelfId ? 1 : 0);
+    insertScreen(USER_ID, "account", _isSelfId ? 1 : 0, "screen_open");
   }
 
   initAccountDetails() async {

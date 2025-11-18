@@ -108,6 +108,14 @@ CREATE TABLE skills_of_users(
 );
 
 
+CREATE TABLE reason_master(
+    id int PRIMARY KEY auto_increment,
+    reason varchar(100),
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
 
 CREATE TABLE employees_of_problems(
     id int PRIMARY KEY auto_increment,

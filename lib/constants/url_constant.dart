@@ -34,6 +34,10 @@ const URL_DELETE_SKILL_OF_USER = '$_domain${_baseUrl}user/deleteSkill';
 
 const URL_CREATE_OTP_VERIFICATION = '$_domain${_baseUrl}optVerification';
 
+const URL_REASON_MASTER = '$_domain${_baseUrl}reasonMaster';
+
+
+
 const URL_NOTIFICATION_COUNT = '$_domain${_baseUrl}newNotificationCount';
 const URL_USER_NOTIFICATION_LIST = '$_domain${_baseUrl}getNotifications';
 

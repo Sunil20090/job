@@ -46,7 +46,7 @@ class _PostProblemScreenState extends State<PostProblemScreen> {
   @override
   void initState() {
     super.initState();
-    insertScreen(USER_ID, "post_problem", 0);
+    insertScreen(USER_ID, "post_problem", 0, "screen_open");
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:job/constants/theme_constant.dart';
 import 'package:job/constants/url_constant.dart';
 import 'package:job/pages/apply_for_requirement_screen.dart';
 import 'package:job/pages/common_pages/image_view_screen.dart';
+import 'package:job/pages/common_pages/report_manager/report_screen.dart';
 import 'package:job/pages/dashboard/acount/other_account_screen.dart';
 import 'package:job/user/user_service.dart';
 import 'package:job/utils/api_service.dart';
@@ -40,7 +41,7 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
     initCommentList(widget.problem['id']);
     initRequirementList();
     initImageList(widget.problem['id']);
-    insertScreen(USER_ID, "problem_detail", widget.problem['id']);
+    insertScreen(USER_ID, "problem_detail", widget.problem['id'], "screen_open");
   }
 
   initRequirementList() async {
@@ -133,6 +134,22 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                     ),
                   ),
                 ),
+
+                Positioned(
+                  child: Row(
+                    children: [
+                      BackButton(),
+                      Spacer(),
+                      PopupMenuButton(itemBuilder: (context){
+                        return [
+                          PopupMenuItem(child: Text('Report Problem'), onTap: (){
+                            reportProblem();
+                          },)
+                        ];
+                      })
+                    ],
+                  )
+                )
               ],
             ),
           ),
@@ -413,5 +430,9 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
         builder: (builder) => OtherAccountScreen(profile_id: 0),
       ),
     );
+  }
+  
+  void reportProblem() {
+    Navigator.push(context, MaterialPageRoute(builder: (builder)=> ReportScreen(title: 'Report problem')));
   }
 }
