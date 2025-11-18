@@ -104,60 +104,58 @@ class _ProblemScreenState extends State<ProblemScreen> {
                   title: 'Problem',
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          openSearchScreen();
-                        },
-                        child: Icon(
+                      IconButton(
+                        onPressed: openSearchScreen,
+                        icon: Icon(
                           Icons.search,
                           size: getTextTheme().headlineLarge?.fontSize,
                           color: COLOR_PRIMARY,
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          openNotificationScreen();
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconButton(
+                            onPressed: openNotificationScreen,
+                            icon: Icon(
                               Icons.notifications_outlined,
                               size: getTextTheme().headlineLarge?.fontSize,
                               color: COLOR_PRIMARY,
                             ),
-                            Positioned(
-                              top: -1,
-                              right: -1,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: (_notificationCount != 0)
-                                    ? Container(
-                                        height: 22,
-                                        width: 22,
-                                        alignment: Alignment.center,
-                                        color: Colors.red,
-                                        child: Text(
-                                          '${formatNumber(_notificationCount)}',
-                                          style: TextStyle(color: COLOR_BASE),
-                                        ),
-                                      )
-                                    : null,
-                              ),
+                          ),
+                          Positioned(
+                            top: -1,
+                            right: -1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: (_notificationCount != 0)
+                                  ? Container(
+                                      height: 22,
+                                      width: 22,
+                                      alignment: Alignment.center,
+                                      color: Colors.red,
+                                      child: Text(
+                                        '${formatNumber(_notificationCount)}',
+                                        style: TextStyle(color: COLOR_BASE),
+                                      ),
+                                    )
+                                  : null,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       addHorizontalSpace(6),
-                      InkWell(
-                        onTap: () {
-                          getList();
+
+                      PopupMenuButton(
+                        iconColor: COLOR_PRIMARY,
+                        itemBuilder: (itemBuilder) {
+                          return [
+                            PopupMenuItem(child: Text('About')),
+                            PopupMenuItem(child: Text('Privacy Policy')),
+                            PopupMenuItem(child: Text('How to use')),
+                            PopupMenuItem(child: Text('Settings')),
+                          ];
                         },
-                        child: Icon(
-                          Icons.mail_outline,
-                          size: getTextTheme().headlineLarge?.fontSize,
-                          color: COLOR_PRIMARY,
-                        ),
                       ),
                     ],
                   ),

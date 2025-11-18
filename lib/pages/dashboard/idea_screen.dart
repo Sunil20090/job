@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:job/components/profile_thumbnail.dart';
-import 'package:job/components/rounded_rect_image.dart';
 import 'package:job/components/screen_action_bar.dart';
 import 'package:job/components/screen_frame.dart';
 import 'package:job/constants/theme_constant.dart';
@@ -41,7 +40,7 @@ class _IdeaScreenState extends State<IdeaScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenFrame(
-      titleBar: ScreenActionBar(title: 'Ideas'),
+      titleBar: ScreenActionBar(title: 'Ideas ${USER_ID}'),
       body: Container(
         child: Column(
           children: [
@@ -57,18 +56,28 @@ class _IdeaScreenState extends State<IdeaScreen> {
                     ),
 
                     addHorizontalSpace(),
-                
+
                     Expanded(
                       child: Wrap(
                         children: [
                           Column(
-                             crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(idea['title'], style: getTextTheme().titleSmall),
-                              Text('Solution: ${idea['content']}', style: getTextTheme().bodySmall, maxLines: 3,overflow: TextOverflow.ellipsis,),
+                              Text(
+                                idea['title'],
+                                style: getTextTheme().titleSmall,
+                              ),
+                              Text(
+                                'Solution: ${idea['content']}',
+                                style: getTextTheme().bodySmall,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               Text(
                                 'By: ${idea['username']}',
-                                style: getTextTheme(color: COLOR_PRIMARY).titleSmall,
+                                style: getTextTheme(
+                                  color: COLOR_PRIMARY,
+                                ).titleSmall,
                               ),
                             ],
                           ),

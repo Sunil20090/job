@@ -1,5 +1,6 @@
 import 'package:job/components/notification_item.dart';
 import 'package:job/components/screen_action_bar.dart';
+import 'package:job/components/screen_frame.dart';
 import 'package:job/constants/theme_constant.dart';
 import 'package:job/constants/url_constant.dart';
 import 'package:job/user/user_service.dart';
@@ -38,27 +39,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: SCREEN_PADDING,
-          child: Column(
-            children: [
-              ScreenActionBar(title: 'Notificaton', backButtonEnabled: true),
-              addVerticalSpace(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _notificationList.length,
-                  itemBuilder: (context, index) {
-                    return NotificationItem(
-                      notification: _notificationList[index],
-                    );
-                  },
-                ),
-              ),
-            ],
+    return ScreenFrame(
+      titleBar: ScreenActionBar(title: 'Notification', backButtonEnabled: true,),
+      body: Column(
+        children: [
+          ScreenActionBar(title: 'Notificaton', backButtonEnabled: true),
+          addVerticalSpace(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _notificationList.length,
+              itemBuilder: (context, index) {
+                return NotificationItem(notification: _notificationList[index]);
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

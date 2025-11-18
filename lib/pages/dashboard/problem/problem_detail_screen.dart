@@ -41,7 +41,12 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
     initCommentList(widget.problem['id']);
     initRequirementList();
     initImageList(widget.problem['id']);
-    insertScreen(USER_ID, "problem_detail", widget.problem['id'], "screen_open");
+    insertScreen(
+      USER_ID,
+      "problem_detail",
+      widget.problem['id'],
+      "screen_open",
+    );
   }
 
   initRequirementList() async {
@@ -140,16 +145,21 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                     children: [
                       BackButton(),
                       Spacer(),
-                      PopupMenuButton(itemBuilder: (context){
-                        return [
-                          PopupMenuItem(child: Text('Report Problem'), onTap: (){
-                            reportProblem();
-                          },)
-                        ];
-                      })
+                      PopupMenuButton(
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: Text('Report Problem'),
+                              onTap: () {
+                                reportProblem();
+                              },
+                            ),
+                          ];
+                        },
+                      ),
                     ],
-                  )
-                )
+                  ),
+                ),
               ],
             ),
           ),
@@ -164,53 +174,58 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                   style: getTextTheme().bodySmall,
                 ),
                 addVerticalSpace(DEFAULT_LARGE_SPACE),
-                if (_requirement_list.length > 0)
-                  Text('Requirements:', style: getTextTheme().titleSmall),
+                Divider(),
+                if (_requirement_list.isNotEmpty)
+                  Text('Requirements:', style: getTextTheme().titleMedium),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _requirement_list.map((requirement) {
                     return Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(requirement['name']),
-                            Spacer(),
-                            Container(
-                              // margin: EdgeInsets.all(1),
-                              padding: EdgeInsets.symmetric(horizontal: 6),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: Colors.green,
+                        ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(requirement['name']),
+                              Spacer(),
+                              Container(
+                                // margin: EdgeInsets.all(1),
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.green,
+                                ),
+                                child: Text(
+                                  requirement['status'],
+                                  style: TextStyle(color: COLOR_BASE),
+                                ),
                               ),
-                              child: Text(
-                                requirement['status'],
-                                style: TextStyle(color: COLOR_BASE),
+                              addHorizontalSpace(),
+                              if(widget.problem['posted_by'] != USER_ID) ColoredButton(
+                                backgroundColor: requirement['isApplied'] == 0
+                                    ? COLOR_PRIMARY
+                                    : COLOR_BLACK,
+                                onPressed: requirement['isApplied'] == 0
+                                    ? () {
+                                        applyForRequirement(requirement);
+                                      }
+                                    : null,
+                                child: requirement['isApplied'] == 0
+                                    ? Text(
+                                        'Apply',
+                                        style: getTextTheme(
+                                          color: COLOR_BASE,
+                                        ).titleSmall,
+                                      )
+                                    : Text(
+                                        'Applied',
+                                        style: getTextTheme(
+                                          color: COLOR_BASE,
+                                        ).titleSmall,
+                                      ),
                               ),
-                            ),
-                            addHorizontalSpace(),
-                            ColoredButton(
-                              backgroundColor: requirement['isApplied'] == 0
-                                  ? COLOR_PRIMARY
-                                  : COLOR_BLACK,
-                              onPressed: () {
-                                applyForRequirement(requirement);
-                              },
-                              child: requirement['isApplied'] == 0
-                                  ? Text(
-                                      'Apply',
-                                      style: getTextTheme(
-                                        color: COLOR_BASE,
-                                      ).titleSmall,
-                                    )
-                                  : Text(
-                                      'Applied',
-                                      style: getTextTheme(
-                                        color: COLOR_BASE,
-                                      ).titleSmall,
-                                    ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         addVerticalSpace(4),
 
@@ -401,6 +416,7 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
       "requirement_id": requirement['id'],
       "user_id": USER_ID,
       "remark": result['remark'],
+      "problem_id": widget.problem['id'],
     };
 
     showDialog(
@@ -417,9 +433,14 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
 
     ApiResponse response = await postService(URL_APPLY_FOR_REQUIREMENT, body);
 
+    Navigator.pop(context);
+
     if (response.isSuccess) {
-      Navigator.pop(context);
       initRequirementList();
+
+      if (response.body['status'] == "NOT OK") {
+        showAlert(context, response.body['heading'], response.body['message']);
+      }
     }
   }
 
@@ -431,8 +452,13 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
       ),
     );
   }
-  
+
   void reportProblem() {
-    Navigator.push(context, MaterialPageRoute(builder: (builder)=> ReportScreen(title: 'Report problem')));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (builder) => ReportScreen(title: 'Report problem'),
+      ),
+    );
   }
 }

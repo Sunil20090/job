@@ -51,7 +51,7 @@ class _ScrollablePageViewState extends State<ScrollablePageView> {
 
       _currentPage += direction;
 
-      print('scrollingLEFT: $direction ,  $_currentPage');
+      // print('scrollingLEFT: $direction ,  $_currentPage');
 
       _pageController.animateToPage(
         _currentPage,
