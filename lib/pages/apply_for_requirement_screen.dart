@@ -7,7 +7,9 @@ import 'package:job/utils/common_function.dart';
 import 'package:flutter/material.dart';
 
 class ApplyForRequirementScreen extends StatefulWidget {
-  const ApplyForRequirementScreen({super.key});
+
+  final String requirementName;
+  const ApplyForRequirementScreen({super.key, required this.requirementName});
 
   @override
   State<ApplyForRequirementScreen> createState() =>
@@ -22,7 +24,9 @@ class _ApplyForRequirementScreenState extends State<ApplyForRequirementScreen> {
     return ScreenFrame(
       titleBar: ScreenActionBar(title: 'Apply here', backButtonEnabled: true),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text('For: ${widget.requirementName}', style: getTextTheme().headlineMedium,),
           addVerticalSpace(),
           FloatingLabelEditBox(
             labelText: 'Remark...',

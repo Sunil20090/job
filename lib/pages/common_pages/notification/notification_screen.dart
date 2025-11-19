@@ -40,19 +40,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenFrame(
-      titleBar: ScreenActionBar(title: 'Notification', backButtonEnabled: true,),
+      titleBar: ScreenActionBar(title: 'Notification', backButtonEnabled: false,),
       body: Column(
         children: [
-          ScreenActionBar(title: 'Notificaton', backButtonEnabled: true),
+
+          ..._notificationList.map((notification){
+            return NotificationItem(notification: notification);
+          }).toList(),
           addVerticalSpace(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _notificationList.length,
-              itemBuilder: (context, index) {
-                return NotificationItem(notification: _notificationList[index]);
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: ListView.builder(
+          //     itemCount: _notificationList.length,
+          //     itemBuilder: (context, index) {
+          //       return 
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

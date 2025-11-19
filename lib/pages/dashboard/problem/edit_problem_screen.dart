@@ -34,10 +34,10 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
     super.initState();
     getProblem();
     initSkills();
-    initTeam();
+    _initTeam();
   }
 
-  initTeam() async {
+  _initTeam() async {
     var body = {"problem_id": widget.problem_id};
 
     setState(() {
@@ -49,6 +49,7 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
     setState(() {
       _fetchingTeam = false;
     });
+
     if (response.isSuccess) {
       setState(() {
         _teamMember = response.body;
@@ -61,6 +62,9 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
     return ScreenFrame(
       titleBar: ScreenActionBar(
         title: 'Editing problem',
+        child: IconButton(
+          onPressed: (){},
+          icon: Icon(Icons.delete, color: COLOR_RED,)),
         backButtonEnabled: true,
       ),
       body: _problem != null

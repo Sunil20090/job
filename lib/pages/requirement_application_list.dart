@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class RequirementApplicationList extends StatefulWidget {
   final dynamic requirement;
-  RequirementApplicationList({super.key, required this.requirement});
+  const RequirementApplicationList({super.key, required this.requirement});
 
   @override
   State<RequirementApplicationList> createState() =>
@@ -29,7 +29,7 @@ class _RequirementApplicationListState
   void initState() {
     super.initState();
 
-    initUserList();
+    _initAppliedUserList();
   }
 
   @override
@@ -63,6 +63,7 @@ class _RequirementApplicationListState
                   addVerticalSpace(DEFAULT_LARGE_SPACE),
                   ..._appliedUsers.map((user) {
                     return ListTile(
+                      contentPadding: CONTENT_PADDING,
                       onTap: () {
                         openAccountScreen(user['user_id']);
                       },
@@ -71,6 +72,7 @@ class _RequirementApplicationListState
                         children: [
                           Row(
                             children: [
+                              
                               ProfileThumbnail(thumnail_url: user['thumbnail']),
                               addHorizontalSpace(),
                               Text(
@@ -122,7 +124,7 @@ class _RequirementApplicationListState
     );
   }
 
-  void initUserList() async {
+  void _initAppliedUserList() async {
     var body = {"requirement_id": widget.requirement['id']};
 
     setState(() {
@@ -146,17 +148,17 @@ class _RequirementApplicationListState
   }
 
   void openAccountScreen(int id) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (builder) => AccountScreen(
-          user_id: id,
-          onChanged: () {
-            setState(() {});
-          },
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (builder) => AccountScreen(
+    //       user_id: id,
+    //       onChanged: () {
+    //         setState(() {});
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 
   void updateCounter(int value) async {

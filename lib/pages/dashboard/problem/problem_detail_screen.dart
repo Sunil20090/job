@@ -143,9 +143,10 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                 Positioned(
                   child: Row(
                     children: [
-                      BackButton(),
+                      BackButton(color: COLOR_PRIMARY,),
                       Spacer(),
                       PopupMenuButton(
+                        iconColor: COLOR_PRIMARY,
                         itemBuilder: (context) {
                           return [
                             PopupMenuItem(
@@ -407,7 +408,7 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
   void applyForRequirement(requirement) async {
     var result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (builder) => ApplyForRequirementScreen()),
+      MaterialPageRoute(builder: (builder) => ApplyForRequirementScreen(requirementName: requirement['name'], )),
     );
     if (result == null) {
       return;

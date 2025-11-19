@@ -21,21 +21,7 @@ class _NotificationItemState extends State<NotificationItem> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (builder) => ImageViewScreen(
-                    imageProvider: FadeInImage(
-                      placeholder: NetworkImage(
-                        widget.notification['thumbnail_url'],
-                      ),
-                      image: NetworkImage(widget.notification['image_url']),
-                      fit: BoxFit.cover,
-                    ).image,
-                    title: 'Image',
-                  ),
-                ),
-              );
+              _openImageView();
             },
 
             child: RoundedRectImage(
@@ -70,5 +56,23 @@ class _NotificationItemState extends State<NotificationItem> {
         ],
       ),
     );
+  }
+
+  _openImageView(){
+    Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (builder) => ImageViewScreen(
+                    imageProvider: FadeInImage(
+                      placeholder: NetworkImage(
+                        widget.notification['thumbnail_url'],
+                      ),
+                      image: NetworkImage(widget.notification['image_url']),
+                      fit: BoxFit.cover,
+                    ).image,
+                    title: 'Image',
+                  ),
+                ),
+              );
   }
 }
