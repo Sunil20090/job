@@ -43,7 +43,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
       titleBar: ScreenActionBar(title: 'Notification', backButtonEnabled: false,),
       body: Column(
         children: [
-
           ..._notificationList.map((notification){
             return NotificationItem(notification: notification);
           }).toList(),

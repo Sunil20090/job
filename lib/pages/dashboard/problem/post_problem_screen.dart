@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:job/components/colored_button.dart';
 import 'package:job/components/floating_label_edit_box.dart';
+import 'package:job/components/screen_action_bar.dart';
+import 'package:job/components/screen_frame.dart';
 import 'package:job/constants/theme_constant.dart';
 import 'package:job/constants/url_constant.dart';
 import 'package:job/user/user_service.dart';
@@ -51,86 +53,79 @@ class _PostProblemScreenState extends State<PostProblemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            padding: SCREEN_PADDING,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return ScreenFrame(
+      titleBar: ScreenActionBar(title: 'Post a problem'),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          addVerticalSpace(),
+          FloatingLabelEditBox(
+            labelText: 'Title',
+            controller: _titleController,
+          ),
+          addVerticalSpace(32),
+          FloatingLabelEditBox(
+            labelText: 'Descriptions',
+            maxLines: 4,
+            controller: _descriptionController,
+          ),
+          addVerticalSpace(56),
+          Row(
+            children: [
+              Text(
+                'Attach images',
+                style: getTextTheme(color: COLOR_PRIMARY).titleMedium,
+              ),
+              Spacer(),
+              ColoredButton(
+                onPressed: () {
+                  setState(() {
+                    if (_imageList.length < _IMAGE_LIMIT) {
+                      _imageList.add(null);
+                    } else {
+                      showAlert(context, 'Exceeded!', 'Image limit exceeded');
+                    }
+                  });
+                },
+                child: Icon(Icons.add, color: COLOR_BASE),
+              ),
+              addHorizontalSpace(),
+            ],
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: _imageList.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  return getCaptureImage(index);
+                }).toList(),
+              ),
+            ),
+          ),
+          addVerticalSpace(20),
+
+          Divider(),
+
+          Text('Attach skill requirement!', style: getTextTheme().titleMedium,),
+          ColoredButton(
+            onPressed: !_loading
+                ? () {
+                    postData();
+                  }
+                : null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Post problem', style: getTextTheme().headlineMedium),
-                addVerticalSpace(30),
-                FloatingLabelEditBox(
-                  labelText: 'Title',
-                  controller: _titleController,
-                ),
-                addVerticalSpace(32),
-                FloatingLabelEditBox(
-                  labelText: 'Descriptions',
-                  maxLines: 4,
-                  controller: _descriptionController,
-                ),
-                addVerticalSpace(56),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Attach images',
-                      style: getTextTheme(color: COLOR_PRIMARY).titleMedium,
-                    ),
-                    ColoredButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_imageList.length < _IMAGE_LIMIT) {
-                            _imageList.add(null);
-                          } else {
-                            showAlert(
-                              context,
-                              'Exceeded!',
-                              'Image limit exceeded',
-                            );
-                          }
-                        });
-                      },
-                      child: Icon(Icons.add, color: COLOR_BASE),
-                    ),
-                  ],
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: _imageList.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        return getCaptureImage(index);
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                addVerticalSpace(20),
-                ColoredButton(
-                  onPressed: !_loading
-                      ? () {
-                          postData();
-                        }
-                      : null,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Post',
-                        style: getTextTheme(color: COLOR_BASE).titleMedium,
-                      ),
-                    ],
-                  ),
+                Text(
+                  'Post',
+                  style: getTextTheme(color: COLOR_BASE).titleMedium,
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

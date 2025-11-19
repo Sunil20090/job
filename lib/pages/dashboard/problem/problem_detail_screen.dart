@@ -235,11 +235,13 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                     );
                   }).toList(),
                 ),
-                addVerticalSpace(30),
+                addVerticalSpace(),
+                Divider(),
+                addVerticalSpace(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Solutions:', style: getTextTheme().headlineMedium),
+                    Text('Solutions:', style: getTextTheme().titleMedium),
                     Spacer(),
                     ColoredButton(
                       onPressed: () async {
@@ -265,6 +267,7 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                     addHorizontalSpace(),
                   ],
                 ),
+                
                 addVerticalSpace(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -277,6 +280,7 @@ class _ProblemDetailScreenState extends State<ProblemDetailScreen> {
                   ],
                 ),
                 addVerticalSpace(20),
+                Divider(),
                 Column(
                   children: _commentList.map((comment) {
                     return Column(

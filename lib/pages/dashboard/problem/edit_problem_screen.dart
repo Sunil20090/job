@@ -100,6 +100,7 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
                       },
                       child: Icon(Icons.add, color: COLOR_BASE),
                     ),
+                    addHorizontalSpace(),
                   ],
                 ),
                 ..._skillRequirements.map((requirement) {
@@ -147,6 +148,7 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
                   );
                 }).toList(),
                 addVerticalSpace(DEFAULT_LARGE_SPACE),
+                Divider(),
                 Row(
                   children: [
                     Text(
@@ -175,10 +177,19 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
                           radius: 16,
                           thumnail_url: member['thumbnail'],
                         ),
-                        addHorizontalSpace(),
-                        Text(
-                          '${member['name']}',
-                          style: getTextTheme().titleSmall,
+                        addHorizontalSpace(DEFAULT_LARGE_SPACE),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${member['name']} (${member['skill']})',
+                              style: getTextTheme().titleSmall,
+                            ),
+                            Text(
+                              'Joined at ${timeAgo(member['created_on'])}',
+                              style: getTextTheme().bodySmall,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -281,6 +292,7 @@ class _EditProblemScreenState extends State<EditProblemScreen> {
             RequirementApplicationList(requirement: requirement),
       ),
     );
+    _initTeam();
     setState(() {});
   }
 }

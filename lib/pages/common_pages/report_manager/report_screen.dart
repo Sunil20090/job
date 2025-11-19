@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:job/components/floating_label_edit_box.dart';
 import 'package:job/components/progress_circular.dart';
 import 'package:job/components/screen_action_bar.dart';
 import 'package:job/components/screen_frame.dart';
+import 'package:job/constants/theme_constant.dart';
 import 'package:job/constants/url_constant.dart';
 import 'package:job/user/user_service.dart';
 import 'package:job/utils/api_service.dart';
+import 'package:job/utils/common_function.dart';
 
 class ReportScreen extends StatefulWidget {
   final String title;
@@ -67,7 +68,8 @@ class _ReportScreenState extends State<ReportScreen> {
             title: Row(
             children: [
               Icon(Icons.person_2),
-              Text(item['reason'] as String)
+              addHorizontalSpace(),
+              Text(item['reason'], style: getTextTheme().titleMedium,)
             ],
                     ),
           );

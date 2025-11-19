@@ -6,7 +6,6 @@ import 'package:job/components/screen_action_bar.dart';
 import 'package:job/components/screen_frame.dart';
 import 'package:job/constants/theme_constant.dart';
 import 'package:job/constants/url_constant.dart';
-import 'package:job/pages/dashboard/acount/account_screen.dart';
 import 'package:job/utils/api_service.dart';
 import 'package:job/utils/common_function.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _RequirementApplicationListState
   @override
   void initState() {
     super.initState();
-
     _initAppliedUserList();
   }
 
